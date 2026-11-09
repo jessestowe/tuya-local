@@ -1,18 +1,17 @@
-name: Etaker F2000 Alternator Solar Charger
+name: Alternator and solar charger
 products:
   - id: ex0nj9l2thnxwmby
+    manufacturer: Etaker
+    model: F2000
 entities:
   - entity: switch
-    name: System Power
     icon: mdi:power
     dps:
       - id: 127
         type: boolean
         name: switch
   - entity: sensor
-    name: System Temperature
     class: temperature
-    icon: mdi:thermometer
     dps:
       - id: 128
         type: integer
@@ -20,7 +19,7 @@ entities:
         unit: C
 
   - entity: sensor
-    name: Fan Speed
+    name: Fan speed
     icon: mdi:fan
     dps:
       - id: 129
@@ -28,45 +27,52 @@ entities:
         name: sensor
         unit: "%"
 
-  - entity: sensor
+  - entity: text
     name: Model
     icon: mdi:information
     category: diagnostic
     dps:
       - id: 130
         type: string
-        name: sensor
+        hidden: false
+        name: model
 
-  - entity: sensor
-    name: Hardware Version
+  - entity: text
+    name: Hardware version
     icon: mdi:chip
     category: diagnostic
     dps:
       - id: 131
         type: string
-        name: sensor
+        hidden: false
+        name: hardware_version
 
-  - entity: sensor
-    name: Software Version
+  - entity: text
+    name: Software version
     icon: mdi:software-control
     category: diagnostic
     dps:
       - id: 132
         type: string
-        name: sensor
+        hidden: false
+        name: software_version
 
-  - entity: sensor
-    name: Error Code
-    icon: mdi:alert-circle
+  - entity: binary_sensor
+    name: Error code
+    class: problem
     category: diagnostic
     dps:
       - id: 133
         type: string
         name: sensor
+        mapping:
+          - dps_val: 0
+            value: false
+          - value: true
 
   # Alternator (Car Charging)
   - entity: switch
-    name: Alternator Charging
+    name: Alternator charging
     icon: mdi:car-battery
     dps:
       - id: 101
@@ -74,7 +80,7 @@ entities:
         name: switch
 
   - entity: select
-    name: Alternator Work Mode
+    name: Alternator mode
     icon: mdi:cog
     dps:
       - id: 102
@@ -82,14 +88,14 @@ entities:
         name: option
         mapping:
           - dps_val: "ALT_CHG"
-            value: "Alternator Charge"
+            value: "Alternator charge"
           - dps_val: "CHG_CAR_BAT"
-            value: "Charge Car Battery"
+            value: "Charge car battery"
           - dps_val: "ACT_CAR_BAT"
-            value: "Active Car Battery"
+            value: "Activate car battery"
 
   - entity: number
-    name: Alternator Max Charge Power
+    name: Alternator max charge power
     icon: mdi:lightning-bolt
     dps:
       - id: 103
@@ -103,7 +109,7 @@ entities:
           max: 1000
 
   - entity: number
-    name: Alternator Max Charge Current
+    name: Alternator max charge current
     icon: mdi:current-dc
     dps:
       - id: 104
@@ -117,7 +123,7 @@ entities:
           max: 70
 
   - entity: sensor
-    name: Alternator Port Voltage
+    name: Alternator port voltage
     icon: mdi:sine-wave
     dps:
       - id: 105
@@ -131,7 +137,7 @@ entities:
           - scale: 10
 
   - entity: sensor
-    name: Alternator Power
+    name: Alternator power
     class: power
     icon: mdi:lightning-bolt
     dps:
@@ -141,7 +147,7 @@ entities:
         unit: W
 
   - entity: switch
-    name: Alternator Status Check
+    name: Alternator status check
     icon: mdi:check-circle
     category: config
     dps:
@@ -150,7 +156,7 @@ entities:
         name: switch
 
   - entity: number
-    name: Car Charging Start Voltage
+    name: Car charging start voltage
     class: voltage
     icon: mdi:sine-wave
     category: config
@@ -168,7 +174,7 @@ entities:
 
   # PV (Solar)
   - entity: switch
-    name: PV Port
+    name: PV port
     icon: mdi:solar-panel
     dps:
       - id: 107
@@ -176,7 +182,7 @@ entities:
         name: switch
 
   - entity: select
-    name: PV Work Mode
+    name: PV mode
     icon: mdi:solar-power
     dps:
       - id: 108
@@ -184,12 +190,12 @@ entities:
         name: option
         mapping:
           - dps_val: PV_CHG
-            value: Solar Charging
+            value: Solar charging
           - dps_val: DC_OUT
-            value: DC Output
+            value: DC output
 
   - entity: select
-    name: PV Reverse DC Output Voltage
+    name: PV reverse DC output voltage
     icon: mdi:flash-outline
     dps:
       - id: 109
@@ -206,7 +212,7 @@ entities:
             value: 48V
 
   - entity: number
-    name: PV Output Current
+    name: PV output current
     icon: mdi:current-dc
     dps:
       - id: 110
@@ -220,7 +226,7 @@ entities:
           max: 20
 
   - entity: sensor
-    name: PV Voltage
+    name: PV voltage
     class: voltage
     icon: mdi:sine-wave
     dps:
@@ -232,7 +238,7 @@ entities:
           - scale: 10
 
   - entity: sensor
-    name: PV Power
+    name: PV power
     class: power
     icon: mdi:lightning-bolt
     dps:
@@ -241,9 +247,9 @@ entities:
         name: sensor
         unit: W
 
-  # Etaker Port
+  # Etaker proprietary port (connects to other etaker products)
   - entity: switch
-    name: Etaker Port
+    name: Etaker port
     icon: mdi:connection
     dps:
       - id: 113
@@ -251,7 +257,7 @@ entities:
         name: switch
 
   - entity: sensor
-    name: Etaker Port Voltage
+    name: Etaker port voltage
     class: voltage
     icon: mdi:sine-wave
     dps:
@@ -263,7 +269,7 @@ entities:
           - scale: 10
 
   - entity: sensor
-    name: Etaker Port Power
+    name: Etaker port power
     class: power
     icon: mdi:lightning-bolt
     dps:
@@ -274,7 +280,7 @@ entities:
 
   # DC Port
   - entity: switch
-    name: DC Port
+    name: DC port
     icon: mdi:power-plug
     dps:
       - id: 116
@@ -282,7 +288,7 @@ entities:
         name: switch
 
   - entity: select
-    name: DC Work Mode
+    name: DC mode
     icon: mdi:cog-transfer
     dps:
       - id: 117
@@ -290,14 +296,14 @@ entities:
         name: option
         mapping:
           - dps_val: CHG_POWER
-            value: Charge Power
+            value: Charge power
           - dps_val: CHG_BAT
-            value: Charge Battery
+            value: Charge battery
           - dps_val: DC_OUT
-            value: DC Output
+            value: DC output
 
   - entity: select
-    name: DC Output Voltage
+    name: DC output voltage
     icon: mdi:flash-outline
     dps:
       - id: 118
@@ -314,7 +320,7 @@ entities:
             value: 48V
 
   - entity: number
-    name: DC Output Overcurrent Protection
+    name: DC output overcurrent protection
     icon: mdi:shield-alert
     category: config
     dps:
@@ -329,7 +335,7 @@ entities:
           max: 40
 
   - entity: number
-    name: DC Charge Battery Voltage
+    name: DC charge battery voltage
     class: voltage
     icon: mdi:sine-wave
     category: config
@@ -346,7 +352,7 @@ entities:
           max: 600
 
   - entity: number
-    name: DC Charge Current
+    name: DC charge current
     icon: mdi:current-dc
     category: config
     dps:
@@ -362,7 +368,7 @@ entities:
           max: 600
 
   - entity: number
-    name: DC Precharge Voltage
+    name: DC precharge voltage
     class: voltage
     icon: mdi:sine-wave
     category: config
@@ -379,7 +385,7 @@ entities:
           max: 600
 
   - entity: number
-    name: DC Precharge Current
+    name: DC precharge current
     icon: mdi:current-dc
     category: config
     dps:
@@ -395,7 +401,7 @@ entities:
           max: 100
 
   - entity: select
-    name: DC Charge Power Source Voltage
+    name: DC charge power source voltage
     icon: mdi:sine-wave
     category: config
     dps:
@@ -409,7 +415,7 @@ entities:
             value: 48V
 
   - entity: sensor
-    name: DC Port Voltage
+    name: DC port voltage
     class: voltage
     icon: mdi:sine-wave
     dps:
@@ -421,7 +427,7 @@ entities:
           - scale: 10
 
   - entity: sensor
-    name: DC Port Power
+    name: DC port power
     class: power
     icon: mdi:lightning-bolt
     dps:
