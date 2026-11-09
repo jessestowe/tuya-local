@@ -10,6 +10,15 @@ entities:
       - id: 127
         type: boolean
         name: switch
+      - id: 130
+        type: string
+        name: model
+      - id: 131
+        type: string
+        name: hardware_version
+      - id: 132
+        type: string
+        name: software_version
   - entity: sensor
     class: temperature
     dps:
@@ -17,7 +26,6 @@ entities:
         type: integer
         name: sensor
         unit: C
-
   - entity: sensor
     name: Fan speed
     icon: mdi:fan
@@ -26,39 +34,7 @@ entities:
         type: integer
         name: sensor
         unit: "%"
-
-  - entity: text
-    name: Model
-    icon: mdi:information
-    category: diagnostic
-    dps:
-      - id: 130
-        type: string
-        hidden: false
-        name: model
-
-  - entity: text
-    name: Hardware version
-    icon: mdi:chip
-    category: diagnostic
-    dps:
-      - id: 131
-        type: string
-        hidden: false
-        name: hardware_version
-
-  - entity: text
-    name: Software version
-    icon: mdi:software-control
-    category: diagnostic
-    dps:
-      - id: 132
-        type: string
-        hidden: false
-        name: software_version
-
   - entity: binary_sensor
-    name: Error code
     class: problem
     category: diagnostic
     dps:
@@ -66,9 +42,42 @@ entities:
         type: string
         name: sensor
         mapping:
-          - dps_val: 0
+          - dps_val: "200"
             value: false
           - value: true
+      - id: 133
+        type: string
+        name: fault_code
+      - id: 133
+        type: string
+        name: description
+        mapping:
+          - dps_val: "200"
+            value: ok
+          - dps_val: "101"
+            value: alternator_overvoltage
+          - dps_val: "102"
+            value: alternator_overcurrent
+          - dps_val: "103"
+            value: alternator_output_overcurrent
+          - dps_val: "201"
+            value: solar_overvoltage
+          - dps_val: "202"
+            value: solar_overcurrent
+          - dps_val: "203"
+            value: solar_output_overcurrent
+          - dps_val: "301"
+            value: output_overvoltage
+          - dps_val: "302"
+            value: output_overcurrent
+          - dps_val: "303"
+            value: output_overload
+          - dps_val: "801"
+            value: overheating
+          - dps_val: "802"
+            value: under_temperature
+          - dps_val: "803"
+            value: fan_malfunction
 
   # Alternator (Car Charging)
   - entity: switch
@@ -95,7 +104,7 @@ entities:
             value: "Activate car battery"
 
   - entity: number
-    name: Alternator max charge power
+    name: Alternator power limit
     icon: mdi:lightning-bolt
     dps:
       - id: 103
@@ -109,8 +118,8 @@ entities:
           max: 1000
 
   - entity: number
-    name: Alternator max charge current
-    icon: mdi:current-dc
+    name: Alternator current limit
+    class: current
     dps:
       - id: 104
         type: integer
@@ -123,23 +132,19 @@ entities:
           max: 70
 
   - entity: sensor
-    name: Alternator port voltage
-    icon: mdi:sine-wave
+    name: Alternator voltage
+    class: voltage
     dps:
       - id: 105
         type: integer
         name: sensor
         unit: V
-        range:
-          min: 0
-          max: 600
         mapping:
           - scale: 10
 
   - entity: sensor
     name: Alternator power
     class: power
-    icon: mdi:lightning-bolt
     dps:
       - id: 106
         type: integer
@@ -156,9 +161,8 @@ entities:
         name: switch
 
   - entity: number
-    name: Car charging start voltage
+    name: Charging start voltage
     class: voltage
-    icon: mdi:sine-wave
     category: config
     dps:
       - id: 135
@@ -195,7 +199,7 @@ entities:
             value: DC output
 
   - entity: select
-    name: PV reverse DC output voltage
+    name: PV output voltage
     icon: mdi:flash-outline
     dps:
       - id: 109
@@ -213,14 +217,12 @@ entities:
 
   - entity: number
     name: PV output current
-    icon: mdi:current-dc
+    class: current
     dps:
       - id: 110
         type: integer
         name: value
         unit: A
-        mapping:
-          - step: 1
         range:
           min: 5
           max: 20
@@ -228,7 +230,6 @@ entities:
   - entity: sensor
     name: PV voltage
     class: voltage
-    icon: mdi:sine-wave
     dps:
       - id: 111
         type: integer
@@ -240,16 +241,15 @@ entities:
   - entity: sensor
     name: PV power
     class: power
-    icon: mdi:lightning-bolt
     dps:
       - id: 112
         type: integer
         name: sensor
         unit: W
 
-  # Etaker proprietary port (connects to other etaker products)
+  # Etaker proprietary port (connects to other Etaker products)
   - entity: switch
-    name: Etaker port
+    name: Expansion port
     icon: mdi:connection
     dps:
       - id: 113
@@ -257,9 +257,8 @@ entities:
         name: switch
 
   - entity: sensor
-    name: Etaker port voltage
+    name: Expansion port voltage
     class: voltage
-    icon: mdi:sine-wave
     dps:
       - id: 114
         type: integer
@@ -269,9 +268,8 @@ entities:
           - scale: 10
 
   - entity: sensor
-    name: Etaker port power
+    name: Expansion port power
     class: power
-    icon: mdi:lightning-bolt
     dps:
       - id: 115
         type: integer
@@ -296,7 +294,7 @@ entities:
         name: option
         mapping:
           - dps_val: CHG_POWER
-            value: Charge power
+            value: Charge power station
           - dps_val: CHG_BAT
             value: Charge battery
           - dps_val: DC_OUT
@@ -320,24 +318,21 @@ entities:
             value: 48V
 
   - entity: number
-    name: DC output overcurrent protection
-    icon: mdi:shield-alert
+    name: DC output current limit
+    class: current
     category: config
     dps:
       - id: 119
         type: integer
         name: value
         unit: A
-        mapping:
-          - step: 1
         range:
           min: 5
           max: 40
 
   - entity: number
-    name: DC charge battery voltage
+    name: DC charge voltage
     class: voltage
-    icon: mdi:sine-wave
     category: config
     dps:
       - id: 120
@@ -353,7 +348,7 @@ entities:
 
   - entity: number
     name: DC charge current
-    icon: mdi:current-dc
+    class: current
     category: config
     dps:
       - id: 121
@@ -370,7 +365,6 @@ entities:
   - entity: number
     name: DC precharge voltage
     class: voltage
-    icon: mdi:sine-wave
     category: config
     dps:
       - id: 122
@@ -386,7 +380,7 @@ entities:
 
   - entity: number
     name: DC precharge current
-    icon: mdi:current-dc
+    class: current
     category: config
     dps:
       - id: 123
@@ -401,8 +395,8 @@ entities:
           max: 100
 
   - entity: select
-    name: DC charge power source voltage
-    icon: mdi:sine-wave
+    name: DC source voltage
+    icon: mdi:flash-outline
     category: config
     dps:
       - id: 124
@@ -415,9 +409,8 @@ entities:
             value: 48V
 
   - entity: sensor
-    name: DC port voltage
+    name: DC voltage
     class: voltage
-    icon: mdi:sine-wave
     dps:
       - id: 125
         type: integer
@@ -427,9 +420,8 @@ entities:
           - scale: 10
 
   - entity: sensor
-    name: DC port power
+    name: DC power
     class: power
-    icon: mdi:lightning-bolt
     dps:
       - id: 126
         type: integer
